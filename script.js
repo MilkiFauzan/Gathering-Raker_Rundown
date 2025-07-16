@@ -70,18 +70,26 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(type, typeSpeed);
     }
     
-    // --- Scroll Animation (Tetap Sama) ---
-    const sections = document.querySelectorAll('.content-section');
-    const revealSection = () => {
-        const triggerBottom = window.innerHeight / 5 * 4;
-        sections.forEach(section => {
-            const sectionTop = section.getBoundingClientRect().top;
-            if (sectionTop < triggerBottom) {
-                section.classList.add('visible');
-            }
-        });
-    };
-    window.addEventListener('scroll', revealSection);
+    // --- Scroll Animation ---
+const animatedSections = document.querySelectorAll('.content-section, .rundown-card');
+
+const revealSection = () => {
+    const triggerBottom = window.innerHeight / 5 * 4.5;
+
+    animatedSections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+
+        if (sectionTop < triggerBottom) {
+            section.classList.add('visible');
+        } else {
+            // Opsional: hapus kelas jika ingin animasi berulang saat scroll ke atas
+            // section.classList.remove('visible');
+        }
+    });
+};
+
+window.addEventListener('scroll', revealSection);
+revealSection(); // Tampilkan section yang sudah terlihat saat load
     
     // --- Inisialisasi semua fungsi ---
     updateProgressBar(); // Panggil sekali saat load
