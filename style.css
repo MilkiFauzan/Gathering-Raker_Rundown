@@ -1,11 +1,15 @@
+/* =================================
+   1. Konfigurasi Dasar & Variabel
+   ================================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
-    --primary-color: #2c5e46; /* Hijau tua */
-    --secondary-color: #f4f4f4; /* Abu-abu muda */
-    --accent-color: #e8a87c; /* Oranye lembut */
+    --primary-color: #2c5e46;
+    --secondary-color: #f4f4f4;
+    --accent-color: #e8a87c;
     --text-color: #333;
     --light-text: #fff;
+    --card-bg: #fff;
 }
 
 body {
@@ -14,33 +18,66 @@ body {
     padding: 0;
     line-height: 1.6;
     color: var(--text-color);
-    background-color: var(--secondary-color);
+    background: linear-gradient(315deg, #d3e4cd, #b8d8be, #f0ead6, #b8d8be);
+    background-size: 400% 400%;
+    animation: animateGradient 15s ease infinite;
 }
 
 .container {
     max-width: 1100px;
-    margin: auto;
-    overflow: hidden;
+    margin: 0 auto;
     padding: 0 2rem;
 }
 
-/* Hero Section */
-.hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('Villa1..png') no-repeat center center/cover;
+/* =================================
+   2. Preloader
+   ================================= */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100vh;
-    color: var(--light-text);
+    z-index: 9999;
+    background: var(--primary-color);
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid var(--light-text);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* =================================
+   3. Hero Section
+   ================================= */
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('Villa1..png') no-repeat center center/cover;
+    background-attachment: fixed;
+    height: 100vh;
+    color: var(--light-text);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    padding: 0 1rem;
-    position: relative;
+    padding: 1rem;
 }
 
 .hero-content {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeIn 1s ease-out 0.5s forwards;
+    max-width: 800px;
 }
 
 .logo {
@@ -51,6 +88,7 @@ body {
 .hero h1 {
     font-size: 3.5rem;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .hero h2 {
@@ -59,22 +97,28 @@ body {
     margin-bottom: 1rem;
 }
 
-.hero p.date {
-    font-size: 1.2rem;
-    background: var(--accent-color);
-    color: var(--primary-color);
+p.date {
+    display: inline-block; /* Pastikan backgroundnya pas dengan konten */
     padding: 0.5rem 1rem;
     border-radius: 5px;
-    display: inline-block;
+    background: var(--accent-color);
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
-/* Event Progress & Dynamic Highlight */
+.event-location::before {
+    content: '|'; /* Tambahkan pemisah | secara otomatis */
+    margin: 0 0.75rem;
+    font-weight: 300;
+}
+
 .event-progress {
     margin-top: 2.5rem;
     background: rgba(0, 0, 0, 0.4);
     padding: 1.5rem;
     border-radius: 10px;
-    backdrop-filter: blur(5px); /* Efek glassmorphism */
+    backdrop-filter: blur(5px);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -94,42 +138,41 @@ body {
 }
 
 .progress-bar {
-    width: 0%; /* Diatur oleh JavaScript */
+    width: 0%;
     height: 15px;
-    background: linear-gradient(90deg, #e8a87c, #b88b7f); /* Gradasi warna aksen */
+    background: linear-gradient(90deg, #e8a87c, #b88b7f);
     border-radius: 25px;
     transition: width 1s ease-out;
 }
 
 .progress-text {
-    font-weight: 600 !important; /* Membuat teks persentase lebih menonjol */
-    font-size: 1.1rem !important;
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .dynamic-highlight {
-    margin-top: 1rem !important;
-    font-size: 1.2rem !important;
-    height: 25px; /* Memberi ruang agar layout tidak "loncat" saat teks berganti */
+    font-size: 1.2rem;
+    height: 25px;
+    margin-top: 1rem;
 }
 
-/* Efek kursor untuk typewriter */
 #typewriter::after {
     content: '|';
     animation: blink 0.7s infinite;
 }
 
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
+/* =================================
+   4. Content Sections
+   ================================= */
+main {
+    background-color: var(--card-bg);
 }
 
-/* Content Section */
 .content-section {
-    padding: 4rem 0;
+    padding: 5rem 0;
     opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
 .content-section.visible {
@@ -154,9 +197,15 @@ body {
     margin: 0.5rem auto 0;
 }
 
-/* Ganti bagian ini di style.css Anda */
+#intro h3 {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    font-weight: 400;
+    line-height: 1.7;
+}
 
-/* Styling untuk Rundown Baru yang Dinamis */
+/* Rundown Section */
 .rundown-container {
     display: flex;
     flex-direction: column;
@@ -166,25 +215,10 @@ body {
 
 .rundown-card {
     display: flex;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    /* Animasi */
-    opacity: 0;
-    transform: translateX(-100px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-/* Atur kartu kedua muncul dari kanan */
-.rundown-card:nth-child(even) {
-    transform: translateX(100px);
-}
-
-/* Kelas 'visible' yang ditambahkan oleh JavaScript untuk memicu animasi */
-.rundown-card.visible {
-    opacity: 1;
-    transform: translateX(0);
 }
 
 .rundown-header {
@@ -197,155 +231,124 @@ body {
     min-width: 200px;
 }
 
-.rundown-header.day-1 {
-    background: linear-gradient(135deg, var(--primary-color), #4a7c66);
-}
+.rundown-header.day-1 { background: linear-gradient(135deg, var(--primary-color), #4a7c66); }
+.rundown-header.day-2 { background: linear-gradient(135deg, var(--accent-color), #c98b67); }
+.rundown-header h3 { font-size: 2rem; margin: 0; font-weight: 700; }
+.rundown-header p { margin: 0; font-size: 1rem; font-weight: 300; }
 
-.rundown-header.day-2 {
-    background: linear-gradient(135deg, var(--accent-color), #c98b67);
-}
-
-.rundown-header h3 {
-    font-size: 2rem;
-    margin: 0;
-    font-weight: 700;
-}
-
-.rundown-header p {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 300;
-}
-
-.rundown-body {
-    padding: 1.5rem 2rem;
-    width: 100%;
-}
-
-.rundown-body ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+.rundown-body { padding: 1rem 2rem; width: 100%; }
+.rundown-body ul { list-style: none; padding: 0; margin: 0; }
 
 .rundown-body li {
-    padding: 0.8rem 0;
-    border-bottom: 1px solid #eee;
-    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    padding: 1.25rem 0 1.25rem 2rem;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    gap: 2rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.rundown-body li:last-child {
-    border-bottom: none;
+.rundown-body li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: var(--card-bg);
+    border: 3px solid var(--accent-color);
+    border-radius: 50%;
 }
 
-.rundown-body strong {
-    color: var(--primary-color);
-    margin-right: 0.5rem;
-}
+.rundown-body li:hover { background-color: #fcfcfc; transform: translateX(5px); }
+.rundown-body li:last-child { border-bottom: none; }
+.rundown-body li strong { flex-shrink: 0; width: 140px; color: var(--primary-color); font-weight: 600; }
+.rundown-body li span { color: #555; font-size: 1rem; }
 
 /* Activities Section */
 .activities-grid {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
- gap: 1.5rem;
- margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 .activity-card {
- background-color: #fff;
- border-radius: 8px;
- box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
- overflow: hidden;
- transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.activity-card:hover {
- transform: translateY(-5px);
- box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
+.activity-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); }
+.activity-card img { width: 100%; height: 200px; object-fit: cover; }
+.activity-card h3 { margin: 1rem; color: var(--primary-color); font-size: 1.5rem; }
+.activity-card p { margin: 0 1rem 1.5rem 1rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-color); }
 
-.activity-card img {
- width: 100%;
- height: 200px;
- object-fit: cover;
-}
-
-.activity-card h3 {
- margin: 1rem;
- color: var(--primary-color);
- font-size: 1.5rem;
-}
-
-.activity-card p {
- margin: 0 1rem 1.5rem 1rem;
- font-size: 0.9rem;
- color: var(--text-color);
-}
-
-/* Footer */
+/* =================================
+   5. Footer
+   ================================= */
 .footer {
     background: var(--primary-color);
     color: var(--light-text);
     text-align: center;
     padding: 2rem 0;
+    margin-top: 4rem;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* =================================
+   6. Animasi Keyframes
+   ================================= */
+@keyframes animateGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
-/* Penyesuaian responsif - HARUS DI BAWAH VERSI DESKTOP */
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* =================================
+   7. Media Queries (Responsif)
+   ================================= */
 @media(max-width: 768px) {
-    /* Pengaturan umum untuk mobile */
-    .hero h1 {
-        font-size: 2.8rem;
+    /* Ukuran Font Umum */
+    .hero h1 { font-size: 1.8rem; }
+    .hero h2 { font-size: 1.5rem; }
+    .content-section h2 { font-size: 1.5rem; }
+    #intro h3 { font-size: 1rem; }
+    p.date {
+        padding: 0.75rem 1rem;
     }
-    .hero h2 {
-        font-size: 1.5rem;
-    }
-    .content-section h2 {
-        font-size: 2rem;
-    }
-    
-    .rundown-card {
-        flex-direction: column;
-        /* Reset animasi agar tidak slide dari samping */
-        transform: translateY(50px);
+    .event-location {
+        display: block; /* Paksa pindah ke baris baru */
+        font-size: 1rem;
+        margin-top: 5px; /* Beri jarak dari tanggal di atasnya */
+        font-weight: 400;
     }
 
-    .rundown-card:nth-child(even) {
-        transform: translateY(50px);
+    .event-location::before {
+        content: ''; /* Hapus pemisah | di tampilan mobile */
+        margin: 0;
     }
 
-    .rundown-card.visible {
-        transform: translateY(0);
-    }
-    
-    .rundown-header {
-        min-width: 80%;
-        padding: 1rem;
-        text-align: center;
-    }
+    /* Rundown Card */
+    .rundown-card { flex-direction: column; }
+    .rundown-header { min-width: 100%; box-sizing: border-box; }
+    .rundown-body { padding: 1rem 1.5rem; }
+    .rundown-body li { flex-direction: column; align-items: flex-start; padding-left: 0; gap: 0.5rem; }
+    .rundown-body li::before { display: none; }
+    .rundown-body li strong { width: auto; font-weight: 700; }
+    .rundown-body li:hover { transform: none; }
+    .rundown-body li .lang-jp { display: block; margin-top: 5px; font-size: 0.85rem; color: #777; }
 
-    /* Perbaikan untuk grid kegiatan */
-    .activities-grid {
-        grid-template-columns: 1fr;
-    }
-    #intro h3 {
-    font-size: 1.5rem;     /* Kecilkan ukuran font sub-judul */
-    line-height: 1.5;    /* Atur jarak baris agar tetap nyaman dibaca */
-    font-weight: 400;    /* Buat sedikit lebih tipis agar tidak terlalu mendominasi */
-    text-align: center;
-}
-.rundown-body li {
-    display: flex;
-    flex-direction: column; /* Membuat item di dalamnya tersusun vertikal */
-}
-
-.rundown-body strong {
-    margin-bottom: 5px; /* Memberi jarak antara waktu dan deskripsi */
-}
+    /* Activities */
+    .activities-grid { grid-template-columns: 1fr; }
 }

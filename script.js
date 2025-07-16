@@ -1,101 +1,118 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Elemen Dinamis Baru: Progress Bar & Typewriter ---
-    const startDate = new Date("Jul 16, 2025 00:00:00").getTime(); // Tanggal mulai (misal hari ini)
-    const eventDate = new Date("Aug 17, 2025 08:00:00").getTime(); // Tanggal acara
-
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-    
-    function updateProgressBar() {
-        const now = new Date().getTime();
-        const totalDuration = eventDate - startDate;
-        const elapsedDuration = now - startDate;
-        
-        // Pastikan tidak negatif atau lebih dari 100%
-        let progressPercentage = (elapsedDuration / totalDuration) * 100;
-        progressPercentage = Math.max(0, Math.min(100, progressPercentage));
-
-        if (progressBar && progressText) {
-            progressBar.style.width = progressPercentage + '%';
-            progressText.innerText = `Kemajuan: ${progressPercentage.toFixed(2)}%`;
-        }
-        
-        if (now > eventDate) {
-             progressBar.style.width = '100%';
-             progressText.innerText = "Acara Sedang Berlangsung!";
-        }
+    // Fungsi untuk menjalankan semua inisialisasi
+    function init() {
+        initPreloader();
+        initProgressBar();
+        initTypewriter();
+        initScrollAnimations();
+        initParallaxEffect();
     }
 
-    // --- Logika Typewriter ---
-    const typewriterElement = document.getElementById('typewriter');
-    const words = ["Kolaborasi", "Menyusun Strategi", "Team Building", "Merayakan Pencapaian"];
-    let wordIndex = 0;
-    let letterIndex = 0;
-    let isDeleting = false;
+    // 1. Logika Preloader
+    function initPreloader() {
+        const preloader = document.getElementById('preloader');
+        if (!preloader) return;
 
-    function type() {
-        const currentWord = words[wordIndex];
+        window.addEventListener('load', () => {
+            preloader.classList.add('hidden');
+        });
+    }
+
+    // 2. Logika Progress Bar
+    function initProgressBar() {
+        const eventDate = new Date("Jul 19, 2025 08:00:00").getTime();
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
         
-        if (isDeleting) {
-            // Proses menghapus
-            letterIndex--;
-        } else {
-            // Proses mengetik
-            letterIndex++;
-        }
+        if (!progressBar || !progressText) return;
 
-        if (typewriterElement) {
+        function update() {
+            // Kita gunakan tanggal sekarang sebagai awal, agar progress dimulai dari 0 saat ini
+            const startDate = new Date("Jul 16, 2025 00:00:00").getTime();
+            const now = new Date().getTime();
+            const totalDuration = eventDate - startDate;
+            const elapsedDuration = now - startDate;
+
+            let percentage = Math.max(0, Math.min(100, (elapsedDuration / totalDuration) * 100));
+
+            progressBar.style.width = percentage + '%';
+            progressText.innerText = `進捗: ${percentage.toFixed(2)}%`;
+
+            if (now > eventDate) {
+                progressBar.style.width = '100%';
+                progressText.innerText = "イベント開催中！";
+            }
+        }
+        update();
+        setInterval(update, 5000);
+    }
+
+    // 3. Logika Typewriter
+    function initTypewriter() {
+        const typewriterElement = document.getElementById('typewriter');
+        if (!typewriterElement) return;
+
+        const words = ["コラボレーション", "戦略立案", "チームビルディング", "成果を祝う"];
+        let wordIndex = 0, letterIndex = 0, isDeleting = false;
+
+        function type() {
+            const currentWord = words[wordIndex];
+            let typeSpeed = 150;
+
+            if (isDeleting) {
+                letterIndex--;
+                typeSpeed /= 2;
+            } else {
+                letterIndex++;
+            }
+
             typewriterElement.textContent = currentWord.substring(0, letterIndex);
-        }
-        
-        let typeSpeed = 200;
 
-        if (isDeleting) {
-            typeSpeed /= 2; // Lebih cepat saat menghapus
+            if (!isDeleting && letterIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && letterIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+            setTimeout(type, typeSpeed);
         }
-
-        // Jika kata selesai diketik
-        if (!isDeleting && letterIndex === currentWord.length) {
-            typeSpeed = 2000; // Jeda sebelum mulai menghapus
-            isDeleting = true;
-        } 
-        // Jika kata selesai dihapus
-        else if (isDeleting && letterIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length; // Pindah ke kata berikutnya
-            typeSpeed = 500; // Jeda sebelum mulai mengetik kata baru
-        }
-        
-        setTimeout(type, typeSpeed);
+        type();
     }
-    
-    // --- Scroll Animation ---
-const animatedSections = document.querySelectorAll('.content-section, .rundown-card');
 
-const revealSection = () => {
-    const triggerBottom = window.innerHeight / 5 * 4.5;
+    // 4. Logika Animasi saat Scroll
+    function initScrollAnimations() {
+        const animatedElements = document.querySelectorAll('.content-section, .activity-card, .rundown-card');
+        if (animatedElements.length === 0) return;
 
-    animatedSections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
 
-        if (sectionTop < triggerBottom) {
-            section.classList.add('visible');
-        } else {
-            // Opsional: hapus kelas jika ingin animasi berulang saat scroll ke atas
-            // section.classList.remove('visible');
-        }
-    });
-};
+        animatedElements.forEach(el => observer.observe(el));
+    }
 
-window.addEventListener('scroll', revealSection);
-revealSection(); // Tampilkan section yang sudah terlihat saat load
-    
-    // --- Inisialisasi semua fungsi ---
-    updateProgressBar(); // Panggil sekali saat load
-    revealSection(); // Panggil sekali saat load
-    type(); // Mulai typewriter
-    
-    // Update progress bar setiap beberapa detik agar lebih akurat
-    setInterval(updateProgressBar, 5000); 
+    // 5. Logika Efek Parallax
+    function initParallaxEffect() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+
+        window.addEventListener('scroll', () => {
+            let scrollPosition = window.pageYOffset;
+            hero.style.backgroundPosition = `center ${scrollPosition * 0.4}px`;
+        });
+    }
+
+    // Jalankan semua fungsi
+    init();
+
 });
